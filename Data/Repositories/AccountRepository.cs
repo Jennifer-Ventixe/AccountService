@@ -12,4 +12,3 @@ public class AccountRepository(DataContext context) : BaseRepository<AccountEnti
         return await _context.Account.FirstOrDefaultAsync(a => a.Email == email);
     }
 }
-}
