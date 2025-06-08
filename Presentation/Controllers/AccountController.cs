@@ -33,7 +33,7 @@ public class AccountController(IAccountService AccountService) : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
         var result = await _accountService.CreateAccountAsync(request);
-        return result.Success ? Ok() : StatusCode(StatusCodes.Status500InternalServerError, "Unable to create Account.");
+        return result.Success ? Ok(new { }) : StatusCode(StatusCodes.Status500InternalServerError, "Unable to create Account.");
     }
 
     [HttpPost("login")]
