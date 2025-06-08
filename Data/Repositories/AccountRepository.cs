@@ -1,8 +1,8 @@
-﻿using Business.Models;
-using Data.Contexts;
+﻿using Data.Contexts;
+using Data.Entities;
 
 namespace Data.Repositories;
 
-public class AccountRepository(DataContext context) : BaseRepository<Account>(context)
+public class AccountRepository(DataContext context) : BaseRepository<AccountEntity>(context), IAccountRepository
 {
 }

@@ -1,5 +1,4 @@
-﻿using Business.Interfaces;
-using Business.Models;
+﻿using Business.Models;
 using Data.Entities;
 using Data.Repositories;
 
@@ -7,14 +6,15 @@ namespace Business.Services;
 
 public class AccountService(IAccountRepository accountRepository) : IAccountService
 {
-    private readonly IAccountRepository _accountRepository = AccountRepository;
+    private readonly IAccountRepository _accountRepository = accountRepository;
 
     public async Task<AccountResult> CreateAccountAsync(CreateAccountRequest request)
     {
         try
         {
-            var accountEntity = new accountEntity
+            var accountEntity = new AccountEntity
             {
+                UserName = request.UserName,
                 Email = request.Email,
                 Password = request.Password
 
@@ -26,8 +26,9 @@ public class AccountService(IAccountRepository accountRepository) : IAccountServ
                 : new AccountResult { Success = false, Error = result.Error };
         }
 
-        catch (Exception ex)
-        {
+        catch (Exception ex) { 
+
+
             return new AccountResult
             {
                 Success = false,
@@ -41,14 +42,16 @@ public class AccountService(IAccountRepository accountRepository) : IAccountServ
         var result = await _accountRepository.GetAllAsync();
         var accounts = result.Result?.Select(x => new Account
         {
-            id = x.Id,
+            Id = x.Id,
+            UserName = x.UserName,
             Email = x.Email,
             Password = x.Password
-
         });
 
         return new AccountResult<IEnumerable<Account>> { Success = true, Result = accounts };
     }
+
+
 
 
     public async Task<AccountResult<Account?>> GetAccountAsync(string accountId)
@@ -58,10 +61,10 @@ public class AccountService(IAccountRepository accountRepository) : IAccountServ
         {
             var currentAccount = new Account
             {
-                id = result.Result.Id,
+                Id = result.Result.Id,
+                UserName = result.Result.UserName,
                 Email = result.Result.Email,
                 Password = result.Result.Password
-
             };
             return new AccountResult<Account?> { Success = true, Result = currentAccount };
         }
