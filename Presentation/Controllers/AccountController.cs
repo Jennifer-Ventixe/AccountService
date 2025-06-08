@@ -27,7 +27,7 @@ public class AccountController(IAccountService AccountService) : ControllerBase
 
     }
 
-    [HttpPost]
+    [HttpPost("signup")]
     public async Task<IActionResult> Create(CreateAccountRequest request)
     {
         if (!ModelState.IsValid)
@@ -36,6 +36,19 @@ public class AccountController(IAccountService AccountService) : ControllerBase
         return result.Success ? Ok() : StatusCode(StatusCodes.Status500InternalServerError, "Unable to create Account.");
     }
 
+    [HttpPost("login")]
+    public async Task<IActionResult> Login([FromBody] LoginRequest request)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        var result = await _accountService.LoginAsync(request);
+
+        if (!result.Success)
+            return Unauthorized(new { error = result.Error });
+
+        return Ok(new { token = result.Token });
+    }
 
 }
 

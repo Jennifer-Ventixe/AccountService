@@ -72,4 +72,27 @@ public class AccountService(IAccountRepository accountRepository) : IAccountServ
         return new AccountResult<Account?> { Success = false, Error = result.Error ?? "Account not found." };
 
     }
+
+    public async Task<LoginResult> LoginAsync(LoginRequest request) // tgait hjälp av chatgpt med koden
+    {
+        var account = await _accountRepository.GetByEmailAsync(request.Email);
+
+        if (account == null || account.Password != request.Password) 
+        {
+            return new LoginResult
+            {
+                Success = false,
+                Error = "Invalid username or password"
+            };
+        }
+
+        
+        var token = $"fake-token-for-{account.Id}";
+
+        return new LoginResult
+        {
+            Success = true,
+            Token = token
+        };
+    }
 }
